@@ -56,6 +56,10 @@ const FolderParent = (props: PropsFolderParent) => {
       <div
         className='flex items-center relative w-fit text-accent-6 data-[selected="true"]:text-accent-8 h-7'
         data-selected={selected}
+        /*
+        se da click izquierdo en el div y se selecciona la opcion de mover y se ponde un fondo de rayas ayul y aparece un circulo que se puede mover siguiendo al cursor dentro del contenerdor con el id="root-sidebar",
+        el objetivo es que el curculo se pueda mover y se pueda hacer hover sobre estos divs a exepcion de el seleccionado. si al final se hace click en otro div se debe de mover el div seleccionado a la posicion del div donde se hizo click.
+        */
       >
         {selected && (
           <motion.div
