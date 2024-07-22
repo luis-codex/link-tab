@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 208 100% 20%;
+    --card: 0 0% 98%;
+    --card-foreground: 208 100% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 208 100% 20%;
+    --primary: 208 100% 20%;
+    --primary-foreground: 240 5.9% 90%;
+    --secondary: 0 0% 80%;
+    --secondary-foreground: 208 100% 20%;
+    --muted: 0 0% 80%;
+    --muted-foreground: 0 0% 47%;
+    --accent: 0 0% 91%;
+    --accent-foreground: 208 100% 20%;
+    --destructive: 0 62.8% 69.4%;
+    --destructive-foreground: 208 100% 20%;
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+    --ring: 240 4.9% 16.1%;
+
+    /* accents */
+    --accent-8: 0 0% 2%;
+    --accent-7: 0 0% 7%; /* sub-header */
+    --accent-6: 0 0% 37%; /* Paragraph */
+    --accent-5: 0 0% 47%; /* Paragraph */
+    --accent-4: 0 0% 60%;
+    --accent-3: 0 0% 73%;
+    --accent-2: 0 0% 80%;
+    --accent-1: 0 0% 93%;
+
+    --radius: 0.5rem;
+    font-size: 16px;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 208 100% 97%;
+    --card: 0 0% 5%;
+    --card-foreground: 208 100% 97%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 208 100% 97%;
+    --primary: 208 100% 97%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 0 0% 20.1%;
+    --secondary-foreground: 208 100% 97%;
+    --muted: 0 0% 20.1%;
+    --muted-foreground: 0 0% 53%;
+    --accent: 0 0% 9%;
+    --accent-foreground: 208 100% 97%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 208 100% 97%;
+    --border: 0 0% 20.1%;
+    --input: 0 0% 20.1%;
+    --ring: 240 4.9% 83.9%;
+
+    /* accents */
+    --accent-8: 0 0% 98%;
+    --accent-7: 0 0% 93%; /* sub-header */
+    --accent-6: 0 0% 63%; /* Paragraph */
+    --accent-5: 0 0% 53%; /* Paragraph */
+    --accent-4: 0 0% 40%;
+    --accent-3: 0 0% 27%;
+    --accent-2: 0 0% 20%;
+    --accent-1: 0 0% 7%;
+
+    --radius: 0.5rem;
+    font-size: 16px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    text-rendering: optimizespeed;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+  color: hsl(0, 0%, 63%);
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.container {
+  @apply max-[450px]:px-4;
+}
+
+/* 
+  // COLOR EN UNA PARTE DEL BORDE CON UN COLOR ESPECIFICO
+  a[dara-variant=react] {
+    --accents-2: #333;
+  }
+  a[data-variant=react]:before {
+    background: conic-gradient(from 180deg at 50% 50%,var(--accents-2) 0deg,var(--accents-2) 176deg,#61dafb 193deg,var(--accents-2) 217deg,var(--accents-2) 1turn);
+}
+a[data-variant=react]:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.2px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+*/
+/*  es-toolkit alternativa to lodash */
+
+.bg-oss-alt {
+  background-image: url(/images/bg-oss-alt.svg);
+}
+
+:root {
+  --color-primary: #6965db;
+  --color-primary-chubb: #625ee0;
+  --color-primary-darker: #5b57d1;
+  --color-primary-darkest: #4a47b1;
+  --color-primary-light: #e2e1fc;
+  --success-color: #65db69;
+  --success-light-color: #cafccc;
+  --success-dark-color: #268029;
+  --danger-color: #db6965;
+  --danger-color-light: #fcccca;
+  --danger-color-dark: #802926;
+  --warn-color: #ffce50;
+  --warn-light-color: #fceeca;
+  --warn-dark-color: #cf9911;
+  --gray-0: #fff;
+  --gray-10: #f5f5f5;
+  --gray-20: #ebebeb;
+  --gray-30: #d6d6d6;
+  --gray-40: #b8b8b8;
+  --gray-50: #999;
+  --gray-60: #7a7a7a;
+  --gray-70: #5c5c5c;
+  --gray-80: #3d3d3d;
+  --gray-90: #000;
+  --blue-surface-container: #99e4fd;
+  --on-primary-container: #190064;
+  --surface-high: #f0efff;
+  --surface-low: #f5f5f9;
+  --surface-low-for-dropdown: #fff;
+  --surface-low-hover: #f5f5fc;
+  --surface-lowest: #fff;
+  --surface-text: #1b1b1f;
+  --surface-text-variant: #46464f;
+  --color-text: #343a40;
+  --color-light: #fff;
+  --color-light-alt: #fff;
+  --color-link: #007bff;
+  --background-color-light: #f0fcf0;
+  --yellow-lighter: #fffbf0;
+  --yellow-light: #fff0c9;
+  --yellow-darker: #705400;
+  --red-lighter: #fff0f0;
+  --red-light: #ffdad6;
+  --blue-lighter: #f0fbff;
+  --blue-light: #d1ecff;
+  --brand-active: #4440bf;
+  --brand-hover: #5753d0;
+  --on-surface: #1b1b1f;
+  --surface-primary-container: #e0dfff;
+  --border-outline-variant: #c5c5d0;
+  --border-outline: #767680;
+  --red-based: #ff9494;
+  --red-highest: #700000;
+  --green-based: #a2f1a6;
+  --green-low: #d3ffd2;
+  --green-lowest: #f6fff1;
+  --green-highest: #0b6513;
+  --orange-lowest: #fff4eb;
+  --container-max-width: 1224px;
+  --color-primary-text: #030064;
+  --ac-color-green: #d3ffd2;
+  --ac-color-blue: #d1ecff;
+  --ac-color-orange: #ffe3c7;
+  --ac-color-purple: #e0dfff;
+  --ac-color-yellow: #fff0c9;
+  --ac-color-light-green: #f6fff1;
+  --ac-color-light-blue: #f0fbff;
+  --ac-color-light-orange: #fff4eb;
+  --ac-color-light-purple: #f5f5fc;
+  --ac-color-light-yellow: #fffbf0;
+  --dashed-border-green: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none' stroke='%23A2F1A6' stroke-dasharray='6, 14' stroke-linecap='round' stroke-width='4'/%3E%3C/svg%3E");
+  --dashed-border-blue: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none' stroke='%23D1ECFF' stroke-dasharray='6, 14' stroke-linecap='round' stroke-width='4'/%3E%3C/svg%3E");
+  --dashed-border-orange: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none' stroke='%23FFE3C7' stroke-dasharray='6, 14' stroke-linecap='round' stroke-width='4'/%3E%3C/svg%3E");
+  --dashed-border-purple: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none' stroke='%23E0DFFF' stroke-dasharray='6, 14' stroke-linecap='round' stroke-width='4'/%3E%3C/svg%3E");
+  --dashed-border-yellow: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none' stroke='%23FFF0C9' stroke-dasharray='6, 14' stroke-linecap='round' stroke-width='4'/%3E%3C/svg%3E");
+
+  --bg-current-green: url("data:image/svg+xml, %3Csvg width='248' height='65' fill='none' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' %3E%3Cpath d='m11.192 8.648 227.426-2.647 3.455 52.767-234.1-.866' fill='%23D3FFD2' /%3E%3Cpath d='M9.46 6.681c81.23-1.846 159.954.55 232.61 1.425M9.921 6.966c49.36.183 102.934-.115 228.937 1.276m2.141-1.785c-4.022 16.463-3.029 36.333-.2 51.791M238.327 6.43c2.69 19.422 2.281 40.038.67 52.042m2.037-2.05c-63.158.544-129.32 1.663-232.192 2.043m231.861-1.58c-52.668 2.904-101.819 1.703-231.974 1.241M6.5 56.145c.87-12.86 2.986-24.865 4.431-48.351m-.792 50.244C7.109 36.26 7.275 16.847 9.207 8.73' stroke='%23D3FFD2' stroke-width='11.76' stroke-linecap='round' /%3E%3C/svg%3E");
+}
+
+.dashed-border-orange {
+  background-image: var(--dashed-border-orange);
+}
+.ui-highlighted {
+  position: relative;
+  z-index: 1;
+}
+
+.ui-highlighted:after {
+  background-image: var(--bg-current-green);
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  content: '';
+  height: 105%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -52.5%);
+  width: 105%;
+  z-index: -1;
+}
+
+.bg-stripes-blue {
+  background-color: #60a5fa1a;
+  background-image: linear-gradient(
+    135deg,
+    #3b82f680 10%,
+    #0000 0,
+    #0000 50%,
+    #3b82f680 0,
+    #3b82f680 60%,
+    #0000 0,
+    #0000
+  );
+  background-size: 7.07px 7.07px;
+}
+
+.bg-stripes-gray {
+  background-color: hsl(var(--accent-1) / 0.4);
+  background-image: linear-gradient(
+    135deg,
+    hsl(var(--accent-2)) 10%,
+    #0000 0,
+    #0000 50%,
+    hsl(var(--accent-2)) 0,
+    hsl(var(--accent-2)) 60%,
+    #0000 0,
+    #0000
+  );
+  background-size: 7.07px 7.07px;
+}
