@@ -3,18 +3,19 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from './components/ui/resizable';
+import useLoadBookmarks from './hooks/useLoadBookmarks';
 import BookmarksContent from './sections/BookmarksContent';
 import BookmarksFolders from './sections/BookmarksFolders';
-import FooterSidebar from './sections/FooterSidebar';
-import HeaderSidebar from './sections/HeaderSidebar';
+import FooterSidebar from './sections/sidebar/FooterSidebar';
+import HeaderSidebar from './sections/sidebar/HeaderSidebar';
 
 const Sidebar = () => {
   return (
     <ResizablePanel
       defaultSize={30}
-      maxSize={50}
+      maxSize={40}
       minSize={30}
-      className='h-full flex flex-col gap-2'
+      className='h-full flex flex-col relative'
     >
       <HeaderSidebar />
       <BookmarksFolders />
@@ -30,6 +31,8 @@ const MainContent = () => (
 );
 
 export default function AppCopy() {
+  useLoadBookmarks();
+
   return (
     <ResizablePanelGroup
       direction='horizontal'

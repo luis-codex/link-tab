@@ -1,25 +1,25 @@
 import { ScrollArea } from '@app/components/ui/scroll-area';
 import { useGlobalStore } from '@app/store/store-global';
 import { formatMMDDYYYY } from '@app/utils';
-import { GripHorizontal, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 const useProcessBookmarks = () => {
-  const [data, keysSearchList] = useGlobalStore((s) => [
-    s.data,
+  const [dataList, keysSearchList] = useGlobalStore((s) => [
+    s.dataList,
     s.keysSearchList,
   ]);
 
-  const dataList = useMemo(() => {
-    if (!data) return [];
-    if (!keysSearchList) return data.list;
+  const list = useMemo(() => {
+    if (!dataList) return [];
+    if (!keysSearchList) return dataList.list;
 
-    return data.list.filter((bookmark) =>
+    return dataList.list.filter((bookmark) =>
       keysSearchList.every((key) => bookmark.title.toLowerCase().includes(key))
     );
-  }, [data, keysSearchList]);
+  }, [dataList, keysSearchList]);
 
-  return { dataList };
+  return { list };
 };
 
 function SearchComponent() {
@@ -47,54 +47,53 @@ function SearchComponent() {
         placeholder='search...'
         value={valueSearch}
         onChange={handleChange}
-        className='w-full px-2 py-1.5 bg-transparent placeholder:text-accent-4 outline-none'
+        className='w-full px-2 py-1.5 bg-transparent placeholder:text-accent-5 outline-none'
       />
     </div>
   );
 }
 
 function List() {
-  const { dataList } = useProcessBookmarks();
-  return (
-    <ScrollArea className='size-full px-3'>
-      <div className='size-full grid grid-cols-1 sm:grid-cols-2 gap-x-4 py-4'>
-        {dataList.map((bookmark) => (
-          <div
-            key={bookmark.id}
-            className='text-accent-7 relative flex flex-col !overflow-visible group py-3 pt-4'
-          >
-            <div className='w-full truncate mb-1'>
-              <button className='size-fit mx-auto bg-accent-1 px-1.5 py-1 rounded-lg absolute -top-2 inset-x-0 group-hover:block animate-fade animate-duration-300 hidden'>
-                <GripHorizontal className='size-4' />
-              </button>
-              <span className='dark:text-accent-7 text-accent-6'>
-                {bookmark.title}
-              </span>
-            </div>
-            {bookmark.titleParent && (
-              <div className='font-light text-sm text-accent-4 font-mono truncate'>
-                <span>{bookmark.titleParent}</span>
-              </div>
-            )}
-            {bookmark.dateAdded && (
-              <span className='text-accent-4 text-sm font-light'>
-                {formatMMDDYYYY(bookmark.dateAdded)}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-    </ScrollArea>
-  );
+  const { list } = useProcessBookmarks();
+  const linksSelected = useGlobalStore((s) => s.linksSelected);
+  const toggleSelectLink = useGlobalStore((s) => s.toggleSelectLink);
+
+  return list.map((bookmark) => (
+    <div
+      key={bookmark.id}
+      data-is-selected={linksSelected?.includes(bookmark.id)}
+      onClick={() => toggleSelectLink(bookmark.id)}
+      className='text-accent-7 relative flex flex-col group py-3 data-[is-selected="true"]:bg-stripes p-4'
+    >
+      <h3 className='dark:text-accent-7/90 text-accent-6 truncate font-light tracking-wide mb-1'>
+        {bookmark.title}
+      </h3>
+      {bookmark.titleParent && (
+        <div className='font-light text-sm text-accent-4 font-mono truncate'>
+          <span>{bookmark.titleParent}</span>
+        </div>
+      )}
+      {bookmark.dateAdded && (
+        <span className='text-accent-4 text-sm font-light'>
+          {formatMMDDYYYY(bookmark.dateAdded)}
+        </span>
+      )}
+    </div>
+  ));
 }
 
 export default function BookmarksContent() {
   return (
-    <>
+    <div className='flex flex-col h-full'>
       <div className='border-b border-accent-1 px-2 py-1'>
         <SearchComponent />
+        <ScrollArea className='lowercase flex-1'>
+          <div className='size-full grid grid-cols-1 sm:grid-cols-2'>
+            <List />
+          </div>
+        </ScrollArea>
       </div>
       <List />
-    </>
+    </div>
   );
 }

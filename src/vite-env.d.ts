@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 
 
+declare const isDev: boolean;
+
 /**
  * Removes the promise wrapper from a type.
  * @template T The type to remove the promise wrapper from.

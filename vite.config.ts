@@ -5,7 +5,10 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [ react() ],
-  resolve: {
+  define: {
+    'isDev': process.env.NODE_ENV === 'development'
+  }
+  , resolve: {
     alias: {
       '@app': resolve(__dirname, 'src'),
       '@public': resolve(__dirname, 'public')

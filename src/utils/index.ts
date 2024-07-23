@@ -19,7 +19,6 @@ export const getBookmarksWithUrls = (
     };
     traverse(bookmarks);
     return result;
-
 };
 
 
