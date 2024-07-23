@@ -26,7 +26,8 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/*"],
-      "@public/*": ["public/*"]
+      "@public/*": ["public/*"],
+      "@nested/*": ["nested/*"]
     }
   },
   "include": ["src"]

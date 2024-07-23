@@ -79,7 +79,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground dark:u-bg-noise;
+    @apply bg-background text-foreground dark:u-bg-noise text-base font-sans;
     text-rendering: optimizespeed;
   }
 }

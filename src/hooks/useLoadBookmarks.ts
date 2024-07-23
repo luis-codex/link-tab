@@ -11,8 +11,9 @@ export default function useLoadBookmarks() {
             SetBookmarksTree(tree)
         };
 
-        if (isDev) { init(); return }
+        init()
 
+        if (!__ISPROD_) { return }
         const api = chrome.bookmarks;
         api.onCreated.addListener(init);
         api.onChanged.addListener(init);

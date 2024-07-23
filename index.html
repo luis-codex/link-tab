@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
@@ -8,16 +8,25 @@
   </head>
   <body>
     <div id="root"></div>
-     <svg aria-hidden='true' className='fixed invisible size-[1px] opacity-0'>
-        <filter id='noiseFilter'>
-          <feTurbulence
-            baseFrequency='6.29'
-            numOctaves='6'
-            stitchTiles='stitch'
-            type='fractalNoise'
-          ></feTurbulence>
-        </filter>
-      </svg>
+    <svg
+      aria-hidden="true"
+      style="
+        position: fixed;
+        visibility: hidden;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      "
+    >
+      <filter id="noiseFilter">
+        <feTurbulence
+          baseFrequency="6.29"
+          numOctaves="6"
+          stitchTiles="stitch"
+          type="fractalNoise"
+        ></feTurbulence>
+      </filter>
+    </svg>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

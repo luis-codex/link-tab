@@ -1,12 +1,11 @@
 import { BookmarkList, BookmarkNode } from '@app/store/store-global';
-import dataLocal from '@public/bookmarks.json';
 
 export const getTreeBookmarks = async (): Promise<chrome.bookmarks.BookmarkTreeNode[]> => {
-    return isDev ? dataLocal : chrome.bookmarks.getTree()
+    return __ISPROD_ ? chrome.bookmarks.getTree() : JSON.parse(__BOOKMARKS__)
 }
 
 export const getTreeByFolderId = async (folderId: string): Promise<chrome.bookmarks.BookmarkTreeNode[]> => {
-    return isDev ? dataLocal : chrome.bookmarks.getSubTree(folderId)
+    return __ISPROD_ ? chrome.bookmarks.getSubTree(folderId) : JSON.parse(__BOOKMARKS__)
 }
 
 export const getBookmarksWithUrls = (

@@ -87,13 +87,12 @@ export default function BookmarksContent() {
     <div className='flex flex-col h-full'>
       <div className='border-b border-accent-1 px-2 py-1'>
         <SearchComponent />
-        <ScrollArea className='lowercase flex-1'>
-          <div className='size-full grid grid-cols-1 sm:grid-cols-2'>
-            <List />
-          </div>
-        </ScrollArea>
       </div>
-      <List />
+      <ScrollArea className='lowercase flex-1'>
+        <div className='size-full grid grid-cols-1 sm:grid-cols-2'>
+          <List />
+        </div>
+      </ScrollArea>
     </div>
   );
 }

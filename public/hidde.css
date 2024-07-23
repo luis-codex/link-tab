@@ -1,0 +1,10 @@
+*::-webkit-scrollbar,
+*::after::-webkit-scrollbar,
+*::before::-webkit-scrollbar {
+  display: none !important;
+}
+*,
+*::after,
+*::before {
+  scrollbar-width: none !important;
+}

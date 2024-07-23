@@ -2,6 +2,8 @@
 
 
 declare const isDev: boolean;
+declare const __BOOKMARKS__: string;
+declare const __ISPROD_: boolean;
 
 /**
  * Removes the promise wrapper from a type.
