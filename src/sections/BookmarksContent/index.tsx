@@ -65,9 +65,17 @@ function List() {
       onClick={() => toggleSelectLink(bookmark.id)}
       className='text-accent-7 relative flex flex-col group py-3 data-[is-selected="true"]:bg-stripes p-4'
     >
-      <h3 className='dark:text-accent-7/90 text-accent-6 truncate font-light tracking-wide mb-1'>
-        {bookmark.title}
-      </h3>
+      <div className='dark:text-accent-7/90 text-accent-6 truncate font-light tracking-wide mb-1 grid grid-cols-[auto,1fr] items-center gap-3'>
+        {bookmark.favicon && (
+          <img
+            src={bookmark.favicon}
+            alt={bookmark.title}
+            className='size-4 inline-block'
+          />
+        )}
+        <h3 className='truncate'>{bookmark.title}</h3>
+      </div>
+
       {bookmark.titleParent && (
         <div className='font-light text-sm text-accent-4 font-mono truncate'>
           <span>{bookmark.titleParent}</span>

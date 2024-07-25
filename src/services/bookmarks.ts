@@ -1,4 +1,5 @@
 import { BookmarkList, BookmarkNode } from '@app/store/store-global';
+import { getFaviconUrl } from './favicon';
 
 export const getTreeBookmarks = async (): Promise<chrome.bookmarks.BookmarkTreeNode[]> => {
     return __ISPROD_ ? chrome.bookmarks.getTree() : JSON.parse(__BOOKMARKS__)
@@ -16,7 +17,10 @@ export const getBookmarksWithUrls = (
     const traverse = (nodes: BookmarkNode[],) => {
         nodes.forEach((node) => {
             if (node.url) {
-                result.push({ ...node, titleParent: node.parentId && set.get(node.parentId) });
+                result.push({
+                    ...node, titleParent: node.parentId && set.get(node.parentId),
+                    favicon: getFaviconUrl(node.url)
+                });
             }
             if (node.children && node.children.length > 0) {
                 set.set(node.id, node.title);

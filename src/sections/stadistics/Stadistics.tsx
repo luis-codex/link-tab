@@ -1,18 +1,90 @@
+import { useGlobalStore } from '@app/store/store-global';
 import {
-  Root,
-  Trigger,
-  Portal,
-  Overlay,
-  Content,
-  Title,
   Close,
+  Content,
+  Overlay,
+  Portal,
+  Root,
+  Title,
+  Trigger,
 } from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
-// function Stadisticss() {
-//   return <div>Stadistics</div>;
-// }
+type BookmarkNode = chrome.bookmarks.BookmarkTreeNode;
+
+function flattenBookmarkTree(nodes: chrome.bookmarks.BookmarkTreeNode[]) {
+  const duplicateUrls: Record<string, BookmarkNode[]> = {};
+  const duplicateTitles: Record<string, BookmarkNode[]> = {};
+
+  const nodeStack: BookmarkNode[] = [...nodes];
+  while (nodeStack.length) {
+    const node = nodeStack.pop()!;
+    const { children, title, url } = node;
+
+    if (url) {
+      if (duplicateUrls[url]) duplicateUrls[url].push(node);
+      else duplicateUrls[url] = [node];
+    }
+
+    if (title) {
+      if (duplicateTitles[title]) duplicateTitles[title].push(node);
+      else duplicateTitles[title] = [node];
+    }
+
+    if (children) nodeStack.push(...children);
+  }
+
+  // elimina a los que no tienen duplicados
+  Object.entries(duplicateUrls).forEach(([url, nodes]) => {
+    if (nodes.length === 1) delete duplicateUrls[url];
+  });
+
+  return { duplicateUrls, duplicateTitles };
+}
+
+function Stadisticss() {
+  const [duplicateUrls, setDuplicateUrls] =
+    useState<Record<string, BookmarkNode[]>>();
+  const bookmarksTree = useGlobalStore((state) => state.bookmarksTree);
+
+  useEffect(() => {
+    if (!bookmarksTree) return;
+    // console.log(flattenBookmarkTree(bookmarksTree));
+    const { duplicateUrls } = flattenBookmarkTree(bookmarksTree);
+    setDuplicateUrls(duplicateUrls);
+  }, [bookmarksTree]);
+
+  return (
+    <div className='h-[500px] overflow-auto w-full'>
+      Stadistics
+      <br />
+      <div>
+        <h2>Duplicate Urls</h2>
+        {duplicateUrls && (
+          <div className='grid gap-8'>
+            <div>
+              <h2 className='text-accent-7 my-3'>
+                Total: {Object.keys(duplicateUrls).length}
+              </h2>
+            </div>
+
+            {Object.entries(duplicateUrls).map(([url, nodes]) => (
+              <div key={url} className='grid gap-8 border p-3 break-all'>
+                {nodes.map((node) => (
+                  <div key={node.id}>
+                    <h2 className='text-accent-7'>{node.title}</h2>
+                    <p className='font-mono text-accent-5'>{node.url}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function Stadistics() {
   return (
@@ -61,7 +133,9 @@ export default function Stadistics() {
                   </button>
                 </Close>
               </header>
-              <section></section>
+              <section>
+                <Stadisticss />
+              </section>
             </div>
           </Suspense>
         </Content>

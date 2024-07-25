@@ -18,7 +18,7 @@ export interface BookmarkNode {
     dateGroupModified?: number;
     unmodifiable?: 'managed';
     children?: BookmarkNode[];
-
+    favicon?: string;
 }
 
 
