@@ -1,6 +1,7 @@
 import { getBookmarksWithUrls, getTreeByFolderId } from '@app/services/bookmarks';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import slicePagination, { IPaginationState } from './slices/slicePagination';
 
 type DragItem = {
     type: 'folder',
@@ -26,18 +27,18 @@ export type BookmarkList = Prettify<Omit<BookmarkNode, 'children'>>
 export type BookmarkFolders = Prettify<Omit<BookmarkNode, 'url'>>
 
 
-type ActiveSubNode = {
+type MetadataFolder = {
     id: string,
     title: string,
     countSubFolders: number,
     countSubLinks: number,
     countAllLinks: number,
-    list: BookmarkList[],
 }
 
 export type StateGlobal = {
     count: number,
-    dataList: ActiveSubNode | null
+    metadataFolder: MetadataFolder | null
+    dataList: BookmarkList[] | null
     bookmarksTree: chrome.bookmarks.BookmarkTreeNode[] | null
     linksSelected: string[] | null
     keysSearchList: string[]
@@ -53,28 +54,27 @@ export type ActionsGlobalStore = {
     SetBookmarksTree: (bookmarks: chrome.bookmarks.BookmarkTreeNode[]) => void
 }
 
-export const useGlobalStore = create<StateGlobal & ActionsGlobalStore>()(
-    immer((set) => ({
+export const useGlobalStore = create<StateGlobal & ActionsGlobalStore & IPaginationState>()(
+    immer((set, get, state) => ({
         dataList: null,
+        metadataFolder: null,
         dragItem: null,
         count: 0,
         increment: (qty: number) =>
-            set((state) => {
-                state.count += qty
-            }),
+            set((state) => { state.count += qty }),
         SetDataList: async (parentId) => {
             const tree = await getTreeByFolderId(parentId)
             const list = getBookmarksWithUrls(tree)
 
             set((state) => {
-                state.dataList = {
+                state.metadataFolder = {
                     id: tree[ 0 ].id,
                     title: tree[ 0 ].title,
                     countSubFolders: tree[ 0 ].children?.filter((b) => b.children).length || 0,
                     countSubLinks: tree[ 0 ].children?.filter((b) => !b.children).length || 0,
                     countAllLinks: list.length,
-                    list
                 }
+                state.dataList = list;
             })
         },
         keysSearchList: [],
@@ -95,6 +95,8 @@ export const useGlobalStore = create<StateGlobal & ActionsGlobalStore>()(
         },
 
         bookmarksTree: null,
-        SetBookmarksTree: (bookmarks) => set((state) => { state.bookmarksTree = bookmarks })
+        SetBookmarksTree: (bookmarks) => set((state) => { state.bookmarksTree = bookmarks }),
+
+        ...slicePagination(set, get, state),
     })),
 )

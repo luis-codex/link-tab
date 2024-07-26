@@ -2,24 +2,30 @@ import { ScrollArea } from '@app/components/ui/scroll-area';
 import { useGlobalStore } from '@app/store/store-global';
 import { formatMMDDYYYY } from '@app/utils';
 import { Search } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import ControlsPagination from './ControlsPagination';
 
 const useProcessBookmarks = () => {
-  const [dataList, keysSearchList] = useGlobalStore((s) => [
-    s.dataList,
-    s.keysSearchList,
-  ]);
+  const [dataList, keysSearchList, SetCountList, currentPageSlice] =
+    useGlobalStore((s) => [
+      s.dataList,
+      s.keysSearchList,
+      s.SetCountList,
+      s.currentPageSlice,
+    ]);
 
   const list = useMemo(() => {
     if (!dataList) return [];
-    if (!keysSearchList) return dataList.list;
-
-    return dataList.list.filter((bookmark) =>
+    if (!keysSearchList) return dataList;
+    const listFiltered = dataList.filter((bookmark) =>
       keysSearchList.every((key) => bookmark.title.toLowerCase().includes(key))
     );
-  }, [dataList, keysSearchList]);
 
-  return { list };
+    SetCountList(listFiltered.length);
+    return listFiltered;
+  }, [SetCountList, dataList, keysSearchList]);
+
+  return { list: list.slice(currentPageSlice.start, currentPageSlice.end) };
 };
 
 function SearchComponent() {
@@ -65,7 +71,7 @@ function List() {
       onClick={() => toggleSelectLink(bookmark.id)}
       className='text-accent-7 relative flex flex-col group py-3 data-[is-selected="true"]:bg-stripes p-4'
     >
-      <div className='dark:text-accent-7/90 text-accent-6 truncate font-light tracking-wide mb-1 grid grid-cols-[auto,1fr] items-center gap-3'>
+      <div className='dark:text-accent-7/90 text-accent-6 truncate mb-1 grid grid-cols-[auto,1fr] items-center gap-3'>
         {bookmark.favicon && (
           <img
             src={bookmark.favicon}
@@ -92,15 +98,18 @@ function List() {
 
 export default function BookmarksContent() {
   return (
-    <div className='flex flex-col h-full'>
+    <div className='flex flex-col h-full relative'>
       <div className='border-b border-accent-1 px-2 py-1'>
-        <SearchComponent />
+        <Suspense>
+          <SearchComponent />
+        </Suspense>
       </div>
       <ScrollArea className='lowercase flex-1'>
         <div className='size-full grid grid-cols-1 sm:grid-cols-2'>
           <List />
         </div>
       </ScrollArea>
+      <ControlsPagination />
     </div>
   );
 }

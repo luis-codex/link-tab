@@ -2,28 +2,28 @@ import { useGlobalStore } from '@app/store/store-global';
 import { FolderTree, Link, ListTree } from 'lucide-react';
 
 function ViewDataFolderSelected() {
-  const dataList = useGlobalStore((s) => s.dataList);
-  if (!dataList) return null;
+  const metadataFolder = useGlobalStore((s) => s.metadataFolder);
+  if (!metadataFolder) return null;
   return (
     <div className='u-flex-center-start gap-4'>
       <div className='u-flex-center w-fit gap-2 text-sm text-accent-6'>
         <span>
           <FolderTree className='size-4' />
         </span>
-        <span>{dataList.countSubFolders}</span>
+        <span>{metadataFolder.countSubFolders}</span>
       </div>
       <div className='u-flex-center w-fit gap-2 text-sm text-accent-6'>
         <span>
           <Link className='size-4' />
         </span>
-        <span>{dataList.countSubLinks}</span>
+        <span>{metadataFolder.countSubLinks}</span>
       </div>
       /
       <div className='u-flex-center w-fit gap-2 text-sm text-accent-6'>
         <span>
           <ListTree className='size-4' />
         </span>
-        <span>{dataList.countAllLinks}</span>
+        <span>{metadataFolder.countAllLinks}</span>
       </div>
     </div>
   );
