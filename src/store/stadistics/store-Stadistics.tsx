@@ -15,6 +15,7 @@ export const StadisticsProvider = (props: { children: React.ReactNode }) => {
     }))
   );
 
+  
   return (
     <StadisticsContext.Provider value={current}>
       {props.children}

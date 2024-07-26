@@ -47,7 +47,7 @@ export type StateGlobal = {
 
 export type ActionsGlobalStore = {
     increment: (qty: number) => void,
-    SetDataList: (parentId: string) => void,
+    SetDataList: (parentId?: string) => void,
     SetKeysSearchList: (keys: string[]) => void
     SetDragItem: (dragItem: DragItem | null) => void
     toggleSelectLink: (id?: string) => void
@@ -63,6 +63,13 @@ export const useGlobalStore = create<StateGlobal & ActionsGlobalStore & IPaginat
         increment: (qty: number) =>
             set((state) => { state.count += qty }),
         SetDataList: async (parentId) => {
+            if (!parentId) {
+                set((state) => {
+                    state.metadataFolder = null
+                    state.dataList = null
+                })
+                return
+            }
             const tree = await getTreeByFolderId(parentId)
             const list = getBookmarksWithUrls(tree)
 

@@ -1,4 +1,5 @@
 
+import storageZustand from '@app/utils/storage'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -24,6 +25,8 @@ export const useThemeStore = create(
         }),
         {
             name: 'theme-storage',
+            skipHydration: true,
+            storage: storageZustand(),
         }
     )
 )

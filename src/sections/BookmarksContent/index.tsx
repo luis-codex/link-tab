@@ -68,7 +68,9 @@ function List() {
     <div
       key={bookmark.id}
       data-is-selected={linksSelected?.includes(bookmark.id)}
-      onClick={() => toggleSelectLink(bookmark.id)}
+      onClick={() => {
+        toggleSelectLink(bookmark.id);
+      }}
       className='text-accent-7 relative flex flex-col group py-3 data-[is-selected="true"]:bg-stripes p-4'
     >
       <div className='dark:text-accent-7/90 text-accent-6 truncate mb-1 grid grid-cols-[auto,1fr] items-center gap-3'>

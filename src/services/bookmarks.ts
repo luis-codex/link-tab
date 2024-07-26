@@ -74,6 +74,14 @@ export const deleteBookmarks = async (bookmarkIds: string[]) => {
     return { erros, success }
 }
 
+export const deleteFolder = async (folderId: string) => {
+    try {
+        await chrome.bookmarks.removeTree(folderId)
+        return true
+    } catch (error) {
+        return false
+    }
+}
 export const editFolder = async (folderId: string, title: string) => {
     try {
         await chrome.bookmarks.update(folderId, { title })
@@ -83,6 +91,17 @@ export const editFolder = async (folderId: string, title: string) => {
     }
 }
 
+export const createFolder = async (title: string, id: string) => {
+    try {
+        const folder = await chrome.bookmarks.create({ title, parentId: id })
+        return folder
+    } catch (error) {
+        console.log(error);
+        return null
+    }
+}
+
+
 export const editLink = async (linkId: string, title: string, url: string) => {
     try {
         await chrome.bookmarks.update(linkId, { title, url })
@@ -91,4 +110,5 @@ export const editLink = async (linkId: string, title: string, url: string) => {
         return false
     }
 }
+
 

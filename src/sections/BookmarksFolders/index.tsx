@@ -1,3 +1,4 @@
+import { IconFolderClosed, IconFolderOpen } from '@app/assets/icons';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -6,16 +7,12 @@ import {
   ContextMenuTrigger,
 } from '@app/components/ui/context-menu';
 import { ScrollArea, ScrollBar } from '@app/components/ui/scroll-area';
+import { deleteFolder } from '@app/services/bookmarks';
+import useStoreSidebar from '@app/store/Sidebar/useStoreSidebar';
 import { BookmarkNode, useGlobalStore } from '@app/store/store-global';
 import { motion } from 'framer-motion';
-import { Cloud } from 'lucide-react';
+import { Cloud, Hand, Pencil, Trash } from 'lucide-react';
 import React, { memo, useCallback, useMemo, useState } from 'react';
-// Hook personalizado para manejar el estado de despliegue
-function useToggle(initialState = true) {
-  const [state, setState] = useState(initialState);
-  const toggle = () => setState((state) => !state);
-  return [state, toggle] as const;
-}
 
 type FolderParentProps = {
   title: string;
@@ -25,8 +22,18 @@ type FolderParentProps = {
   node: BookmarkNode;
 };
 
+const useToggleCollapse = () => {
+  const [collapse, setCollapse] = useState(false);
+
+  const toggleCollapse = () => {
+    setCollapse((prev) => !prev);
+  };
+
+  return { collapse, toggleCollapse };
+};
+
 const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
-  const [collapse, toggleCollapse] = useToggle();
+  const { collapse, toggleCollapse } = useToggleCollapse();
   const SetDataList = useGlobalStore((state) => state.SetDataList);
   const dataID = useGlobalStore((state) => state.metadataFolder)?.id;
   const [dragItem, SetDragItem] = useGlobalStore((s) => [
@@ -53,12 +60,16 @@ const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
       console.log('dragItem', dragItem);
       return;
     }
+    if (dataID === id) {
+      SetDataList();
+      return;
+    }
     SetDataList(id);
-  }, [dragItem, id, SetDataList, SetDragItem]);
+  }, [dragItem, dataID, id, SetDataList, SetDragItem]);
 
   const isSelected = useMemo(() => dataID === id, [dataID, id]);
 
-  return { collapse, toggleCollapse, isSelected, handleClick, folders };
+  return { isSelected, handleClick, folders, collapse, toggleCollapse };
 };
 
 type CardProps = {
@@ -72,26 +83,65 @@ const CardContextMenu = ({
   children,
   active,
   id,
+  title,
 }: {
   children: React.ReactNode;
   active: boolean;
   id: string;
+  title: string;
 }) => {
   const SetDragItem = useGlobalStore((s) => s.SetDragItem);
+  const SetIdNewFolder = useStoreSidebar((s) => s.SetIdNewFolder);
 
   return active ? (
     <ContextMenu>
       <ContextMenuTrigger>
         {children}
         <ContextMenuContent className='border border-accent-1 bg-accent-1 font-light tracking-wide'>
-          <ContextMenuItem onSelect={() => SetDragItem({ type: 'folder', id })}>
+          <ContextMenuItem
+            className='u-flex-center-start gap-4'
+            onSelect={() => SetDragItem({ type: 'folder', id })}
+          >
+            <span>
+              <Hand className='size-4' />
+            </span>
             Move
           </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem>Edit</ContextMenuItem>
-          <ContextMenuItem>Delete</ContextMenuItem>
+          <ContextMenuItem
+            className='u-flex-center-start gap-4'
+            onSelect={() => {
+              SetIdNewFolder({ id, title, type: 'edit' });
+            }}
+          >
+            <span>
+              <Pencil className='size-4' />
+            </span>
+            Edit
+          </ContextMenuItem>
+          <ContextMenuItem
+            className='u-flex-center-start gap-4 text-red-500'
+            onSelect={() => {
+              deleteFolder(id);
+            }}
+          >
+            <span>
+              <Trash className='size-4' />
+            </span>
+            Delete
+          </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem>New Subfolder</ContextMenuItem>
+          <ContextMenuItem
+            className='u-flex-center-start gap-4'
+            onSelect={() => {
+              SetIdNewFolder({ id, type: 'new' });
+            }}
+          >
+            <span>
+              <IconFolderClosed className='size-4' />
+            </span>
+            New Subfolder
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenuTrigger>
     </ContextMenu>
@@ -113,14 +163,18 @@ const LineSeparator = () => {
 const Card = ({ handleClick, id, title, parentID }: CardProps) => {
   return (
     <>
-      <CardContextMenu active={id !== '0' && parentID !== '0'} id={id}>
+      <CardContextMenu
+        active={id !== '0' && parentID !== '0'}
+        id={id}
+        title={title}
+      >
         <h2
           id='sidebar-folder-label'
           data-id={id}
           className='px-2 py-1 hover:text-accent-8 cursor-pointer max-w-[200px] truncate animate-fade-in-blur'
           onClick={handleClick}
         >
-          {title.trim() || '...'}
+          {id === '0' ? 'Bookmarks' : title.trim() || '...'}
         </h2>
       </CardContextMenu>
       <LineSeparator />
@@ -128,44 +182,9 @@ const Card = ({ handleClick, id, title, parentID }: CardProps) => {
   );
 };
 
-const IconFolderClosed = ({ className }: { className: string }) => (
-  <svg
-    data-testid='geist-icon'
-    height='16'
-    stroke-linejoin='round'
-    viewBox='0 0 16 16'
-    width='16'
-    className={className}
-  >
-    <path
-      fill-rule='evenodd'
-      clip-rule='evenodd'
-      d='M14.5 4V12.5C14.5 13.0523 14.0523 13.5 13.5 13.5H2.5C1.94772 13.5 1.5 13.0523 1.5 12.5V2.5H6L7.33333 3.5C7.76607 3.82456 8.29241 4 8.83333 4H14.5ZM0 1H1.5H6.16667C6.38304 1 6.59357 1.07018 6.76667 1.2L8.23333 2.3C8.40643 2.42982 8.61696 2.5 8.83333 2.5H14.5H16V4V12.5C16 13.8807 14.8807 15 13.5 15H2.5C1.11929 15 0 13.8807 0 12.5V2.5V1ZM5.75 8H5V9.5H5.75H10.25H11V8H10.25H5.75Z'
-      fill='currentColor'
-    ></path>
-  </svg>
-);
-
-const IconFolderOpen = ({ className }: { className: string }) => (
-  <svg
-    height='16'
-    strokeLinejoin='round'
-    viewBox='0 0 16 16'
-    width='16'
-    className={className}
-  >
-    <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M13.5 4V6H2.5V2.5H6L7.33333 3.5C7.76607 3.82456 8.29241 4 8.83333 4H13.5ZM1 6V2.5V1H2.5H6.16667C6.38304 1 6.59357 1.07018 6.76667 1.2L8.23333 2.3C8.40643 2.42982 8.61696 2.5 8.83333 2.5H13.5H15V4V6H16L15.8333 7.5L15.2471 12.7761C15.1064 14.0422 14.0363 15 12.7624 15H3.23761C1.96373 15 0.893573 14.0422 0.752898 12.7761L0.166667 7.5L0 6H1ZM14 7.5H2H1.6759L2.24372 12.6104C2.29999 13.1169 2.72806 13.5 3.23761 13.5H12.7624C13.2719 13.5 13.7 13.1169 13.7563 12.6104L14.3241 7.5H14Z'
-      fill='currentColor'
-    ></path>
-  </svg>
-);
-
 const FolderParent = memo(
   ({ title, children, subChildren, id, node }: FolderParentProps) => {
-    const { collapse, toggleCollapse, isSelected, handleClick, folders } =
+    const { isSelected, handleClick, folders, collapse, toggleCollapse } =
       useLogicParent(id, subChildren);
 
     return (
@@ -189,9 +208,9 @@ const FolderParent = memo(
             >
               {/* ▶ */}
               {collapse ? (
-                <IconFolderClosed className='size-4' />
-              ) : (
                 <IconFolderOpen className='size-4' />
+              ) : (
+                <IconFolderClosed className='size-4' />
               )}
             </button>
           )}
@@ -204,7 +223,7 @@ const FolderParent = memo(
         </div>
         <div
           className='pl-4 relative data-[visible="false"]:hidden'
-          data-visible={folders.length > 0 && !collapse}
+          data-visible={folders.length > 0 && collapse}
         >
           {isSelected && (
             <div className='border-l absolute h-full border-accent-2 border-dashed left-2 animate-fade' />
@@ -222,8 +241,8 @@ const RenderTree = ({ data }: { data: BookmarkNode }) =>
       title={data.title}
       subChildren={data.children}
       id={data.id}
-      key={data.id}
       node={data}
+      key={data.id}
     >
       {data.children.map((child) => (
         <RenderTree key={child.id} data={child} />
