@@ -4,8 +4,11 @@ import { immer } from 'zustand/middleware/immer';
 import slicePagination, { IPaginationState } from './slices/slicePagination';
 
 type DragItem = {
-    type: 'folder',
-    id: string,
+    type: 'move-folder',
+    payload: { id: string, }
+} | {
+    type: 'move-link',
+    payload: { selected: string[], }
 }
 
 export interface BookmarkNode {

@@ -7,7 +7,11 @@ import {
   ContextMenuTrigger,
 } from '@app/components/ui/context-menu';
 import { ScrollArea, ScrollBar } from '@app/components/ui/scroll-area';
-import { deleteFolder } from '@app/services/bookmarks';
+import {
+  deleteFolder,
+  moveFolderInFolder,
+  moveLinksInFolder,
+} from '@app/services/bookmarks';
 import useStoreSidebar from '@app/store/Sidebar/useStoreSidebar';
 import { BookmarkNode, useGlobalStore } from '@app/store/store-global';
 import { motion } from 'framer-motion';
@@ -55,9 +59,17 @@ const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
 
   const handleClick = useCallback(() => {
     if (dragItem) {
-      console.log('dragItem', dragItem);
+      switch (dragItem.type) {
+        case 'move-folder':
+          moveFolderInFolder(dragItem.payload.id, id);
+          break;
+        case 'move-link':
+          moveLinksInFolder(dragItem.payload.selected, id);
+          break;
+        default:
+          break;
+      }
       SetDragItem(null);
-      console.log('dragItem', dragItem);
       return;
     }
     if (dataID === id) {
@@ -100,7 +112,9 @@ const CardContextMenu = ({
         <ContextMenuContent className='border border-accent-1 bg-accent-1 font-light tracking-wide text-accent-5'>
           <ContextMenuItem
             className='u-flex-center-start gap-4'
-            onSelect={() => SetDragItem({ type: 'folder', id })}
+            onSelect={() =>
+              SetDragItem({ type: 'move-folder', payload: { id } })
+            }
           >
             <span>
               <Hand className='size-4' />

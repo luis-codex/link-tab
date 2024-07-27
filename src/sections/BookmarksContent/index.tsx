@@ -1,8 +1,9 @@
+import CountAnimation from '@app/components/CountAnimation';
 import { ScrollArea } from '@app/components/ui/scroll-area';
 import { createNewTab } from '@app/services/tabs';
 import { useGlobalStore } from '@app/store/store-global';
 import { formatMMDDYYYY } from '@app/utils';
-import { Search } from 'lucide-react';
+import { GripVertical, Search } from 'lucide-react';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import ControlsPagination from './ControlsPagination';
 
@@ -115,13 +116,38 @@ function List() {
   ));
 }
 
+const CounterSelected = () => {
+  const [linksSelected, SetDragItem] = useGlobalStore((s) => [
+    s.linksSelected,
+    s.SetDragItem,
+  ]);
+  if (!linksSelected) return null;
+  return (
+    <div className='u-flex-center gap-4 rounded-lg px-2 font-base bg-accent-1'>
+      <button
+        onClick={() => {
+          SetDragItem({
+            type: 'move-link',
+            payload: { selected: linksSelected },
+          });
+        }}
+        className='outline-none'
+      >
+        <GripVertical className='size-4' />
+      </button>
+      <CountAnimation number={linksSelected.length} size='--7' textSize='sm' />
+    </div>
+  );
+};
+
 export default function BookmarksContent() {
   return (
     <div className='flex flex-col h-full relative'>
-      <div className='border-b border-accent-1 px-2 py-1'>
+      <div className='border-b border-accent-1 px-2 py-1 u-flex-center-between'>
         <Suspense>
           <SearchComponent />
         </Suspense>
+        <CounterSelected />
       </div>
       <ScrollArea className='lowercase flex-1'>
         <div className='size-full grid grid-cols-1 sm:grid-cols-2'>
