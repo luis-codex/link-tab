@@ -4,21 +4,43 @@ import { createNewTab } from '@app/services/tabs';
 import { useGlobalStore } from '@app/store/store-global';
 import { formatMMDDYYYY } from '@app/utils';
 import { GripVertical, Search } from 'lucide-react';
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import ControlsPagination from './ControlsPagination';
 
 const useProcessBookmarks = () => {
-  const [dataList, keysSearchList, SetCountList, currentPageSlice] =
-    useGlobalStore((s) => [
-      s.dataList,
-      s.keysSearchList,
-      s.SetCountList,
-      s.currentPageSlice,
-    ]);
+  const [
+    dataList,
+    keysSearchList,
+    SetCountList,
+    currentPageSlice,
+    metadataFolder,
+    SetDataList,
+  ] = useGlobalStore((s) => [
+    s.dataList,
+    s.keysSearchList,
+    s.SetCountList,
+    s.currentPageSlice,
+    s.metadataFolder,
+    s.SetDataList,
+  ]);
+  const refFirst = useRef(false);
+
+  useEffect(() => {
+    let firstTime = true;
+    if (firstTime) {
+      firstTime = false;
+      return;
+    }
+    if (metadataFolder) {
+      SetDataList(metadataFolder.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataList, refFirst]);
 
   const list = useMemo(() => {
     if (!dataList) return [];
     if (!keysSearchList) return dataList;
+
     const listFiltered = dataList.filter((bookmark) => {
       return keysSearchList.every(
         (key) =>

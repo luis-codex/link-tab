@@ -55,6 +55,7 @@ export type ActionsGlobalStore = {
     SetDragItem: (dragItem: DragItem | null) => void
     toggleSelectLink: (id?: string) => void
     SetBookmarksTree: (bookmarks: chrome.bookmarks.BookmarkTreeNode[]) => void
+    handleCleanSelected: () => void
 }
 
 export const useGlobalStore = create<StateGlobal & ActionsGlobalStore & IPaginationState>()(
@@ -108,6 +109,10 @@ export const useGlobalStore = create<StateGlobal & ActionsGlobalStore & IPaginat
         SetBookmarksTree: (bookmarks) => set((state) => { state.bookmarksTree = bookmarks }),
 
         ...slicePagination(set, get, state),
+
+        handleCleanSelected: () => set((state) => {
+            state.linksSelected = null
+        })
 
     })),
 )

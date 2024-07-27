@@ -57,15 +57,19 @@ const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
     [subChildren]
   );
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
     if (dragItem) {
       switch (dragItem.type) {
-        case 'move-folder':
-          moveFolderInFolder(dragItem.payload.id, id);
+        case 'move-folder': {
+          const res = await moveFolderInFolder(dragItem.payload.id, id);
+          console.log(res);
           break;
-        case 'move-link':
-          moveLinksInFolder(dragItem.payload.selected, id);
+        }
+        case 'move-link': {
+          const res = await moveLinksInFolder(dragItem.payload.selected, id);
+          console.log(res);
           break;
+        }
         default:
           break;
       }
