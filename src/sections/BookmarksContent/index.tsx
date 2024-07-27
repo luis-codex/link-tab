@@ -3,7 +3,7 @@ import { ScrollArea } from '@app/components/ui/scroll-area';
 import { createNewTab } from '@app/services/tabs';
 import { useGlobalStore } from '@app/store/store-global';
 import { formatMMDDYYYY } from '@app/utils';
-import { GripVertical, Search } from 'lucide-react';
+import { MousePointerClick, Search, X } from 'lucide-react';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import ControlsPagination from './ControlsPagination';
 
@@ -15,6 +15,7 @@ const useProcessBookmarks = () => {
     currentPageSlice,
     metadataFolder,
     SetDataList,
+    bookmarksTree,
   ] = useGlobalStore((s) => [
     s.dataList,
     s.keysSearchList,
@@ -22,20 +23,21 @@ const useProcessBookmarks = () => {
     s.currentPageSlice,
     s.metadataFolder,
     s.SetDataList,
+    s.bookmarksTree,
   ]);
   const refFirst = useRef(false);
 
   useEffect(() => {
-    let firstTime = true;
-    if (firstTime) {
-      firstTime = false;
+    if (!refFirst.current) {
+      refFirst.current = true;
       return;
     }
+
     if (metadataFolder) {
       SetDataList(metadataFolder.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataList, refFirst]);
+  }, [bookmarksTree]);
 
   const list = useMemo(() => {
     if (!dataList) return [];
@@ -139,13 +141,18 @@ function List() {
 }
 
 const CounterSelected = () => {
-  const [linksSelected, SetDragItem] = useGlobalStore((s) => [
-    s.linksSelected,
-    s.SetDragItem,
-  ]);
+  const [linksSelected, SetDragItem, handleCleanSelected] = useGlobalStore(
+    (s) => [s.linksSelected, s.SetDragItem, s.handleCleanSelected]
+  );
   if (!linksSelected) return null;
   return (
-    <div className='u-flex-center gap-4 rounded-lg px-2 font-base bg-accent-1'>
+    <div className='u-flex-center relative gap-4 rounded-lg px-2 font-base bg-accent-1 animate-fade-in-blur'>
+      <button
+        className='absolute -right-1 -top-1 p-0.5 text-red-500 bg-red-500/20 backdrop-blur-lg rounded-full'
+        onClick={handleCleanSelected}
+      >
+        <X className='size-3' />
+      </button>
       <button
         onClick={() => {
           SetDragItem({
@@ -155,7 +162,7 @@ const CounterSelected = () => {
         }}
         className='outline-none'
       >
-        <GripVertical className='size-4' />
+        <MousePointerClick className='size-4' />
       </button>
       <CountAnimation number={linksSelected.length} size='--7' textSize='sm' />
     </div>

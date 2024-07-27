@@ -38,7 +38,10 @@ const useToggleCollapse = () => {
 
 const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
   const { collapse, toggleCollapse } = useToggleCollapse();
-  const SetDataList = useGlobalStore((state) => state.SetDataList);
+  const [SetDataList, handleCleanSelected] = useGlobalStore((s) => [
+    s.SetDataList,
+    s.handleCleanSelected,
+  ]);
   const dataID = useGlobalStore((state) => state.metadataFolder)?.id;
   const [dragItem, SetDragItem] = useGlobalStore((s) => [
     s.dragItem,
@@ -73,6 +76,7 @@ const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
         default:
           break;
       }
+      handleCleanSelected();
       SetDragItem(null);
       return;
     }
@@ -81,7 +85,7 @@ const useLogicParent = (id: string, subChildren: BookmarkNode[]) => {
       return;
     }
     SetDataList(id);
-  }, [dragItem, dataID, id, SetDataList, SetDragItem]);
+  }, [dragItem, dataID, id, SetDataList, SetDragItem, handleCleanSelected]);
 
   const isSelected = useMemo(() => dataID === id, [dataID, id]);
 
@@ -178,14 +182,10 @@ const LineSeparator = () => {
   );
 };
 
-const Card = ({ handleClick, id, title, parentID }: CardProps) => {
+const Card = ({ handleClick, id, title }: CardProps) => {
   return (
     <>
-      <CardContextMenu
-        active={id !== '0' && parentID !== '0'}
-        id={id}
-        title={title}
-      >
+      <CardContextMenu active={id !== '0'} id={id} title={title}>
         <h2
           id='sidebar-folder-label'
           data-id={id}

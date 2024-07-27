@@ -89,7 +89,7 @@ export const useGlobalStore = create<StateGlobal & ActionsGlobalStore & IPaginat
             })
         },
         keysSearchList: [],
-        SetKeysSearchList: (keys) => set((state) => { state.keysSearchList = keys }),
+        SetKeysSearchList: (keys) => set((state) => { state.keysSearchList = keys.filter(Boolean) }),
         SetDragItem: (dragItem) => set((state) => { state.dragItem = dragItem }),
 
         linksSelected: null,
