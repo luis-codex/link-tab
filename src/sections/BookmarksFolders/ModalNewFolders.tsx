@@ -41,14 +41,11 @@ export default function ModalNewFolders() {
       <Portal>
         <Content className='fixed inset-0 m-auto w-[300px] h-fit border z-50 bg-background rounded shadow-2xl dark:shadow-foreground/5'>
           <form
-            className='u-bg-noise size-full p-4 grid gap-6 overflow-hidden'
+            className='u-bg-noise size-full p-4 grid gap-6 overflow-hidden text-accent-6'
             onSubmit={handleSubmit}
           >
             <div className='absolute pointer-events-none size-full bg-foreground/5 inset-0'></div>
-            <Title
-              className='font-semibold text-center uppercase text
-            -sm'
-            >
+            <Title className='font-semibold text-center uppercase text-sm'>
               {dataNewFolder?.type === 'edit' ? 'Edit' : 'New'} folder
             </Title>
             <Input

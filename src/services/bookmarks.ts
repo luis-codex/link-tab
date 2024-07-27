@@ -9,6 +9,8 @@ export const getTreeByFolderId = async (folderId: string): Promise<chrome.bookma
     return __ISPROD_ ? chrome.bookmarks.getSubTree(folderId) : JSON.parse(__BOOKMARKS__)
 }
 
+
+
 export const getBookmarksWithUrls = (
     bookmarks: chrome.bookmarks.BookmarkTreeNode[]
 ) => {

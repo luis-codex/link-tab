@@ -105,5 +105,6 @@ export const useGlobalStore = create<StateGlobal & ActionsGlobalStore & IPaginat
         SetBookmarksTree: (bookmarks) => set((state) => { state.bookmarksTree = bookmarks }),
 
         ...slicePagination(set, get, state),
+
     })),
 )

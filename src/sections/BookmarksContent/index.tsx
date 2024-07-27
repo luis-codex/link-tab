@@ -1,4 +1,5 @@
 import { ScrollArea } from '@app/components/ui/scroll-area';
+import { createNewTab } from '@app/services/tabs';
 import { useGlobalStore } from '@app/store/store-global';
 import { formatMMDDYYYY } from '@app/utils';
 import { Search } from 'lucide-react';
@@ -17,9 +18,13 @@ const useProcessBookmarks = () => {
   const list = useMemo(() => {
     if (!dataList) return [];
     if (!keysSearchList) return dataList;
-    const listFiltered = dataList.filter((bookmark) =>
-      keysSearchList.every((key) => bookmark.title.toLowerCase().includes(key))
-    );
+    const listFiltered = dataList.filter((bookmark) => {
+      return keysSearchList.every(
+        (key) =>
+          bookmark.title.toLowerCase().includes(key) ||
+          bookmark.url?.toLowerCase().includes(key)
+      );
+    });
 
     SetCountList(listFiltered.length);
     return listFiltered;
@@ -71,7 +76,7 @@ function List() {
       onClick={() => {
         toggleSelectLink(bookmark.id);
       }}
-      className='text-accent-7 relative flex flex-col group py-3 data-[is-selected="true"]:bg-stripes p-4'
+      className='text-accent-7 relative flex flex-col group py-3 data-[is-selected="true"]:bg-stripes-light dark:data-[is-selected="true"]:bg-stripes-dark p-4'
     >
       <div className='dark:text-accent-7/90 text-accent-6 truncate mb-1 grid grid-cols-[auto,1fr] items-center gap-3'>
         {bookmark.favicon && (
@@ -93,6 +98,18 @@ function List() {
         <span className='text-accent-4 text-sm font-light'>
           {formatMMDDYYYY(bookmark.dateAdded)}
         </span>
+      )}
+      {bookmark.url && (
+        <a
+          className='my-2 truncate text-sm text-accent-5 font-light italic hover:underline underline-offset-2 cursor-pointer w-fit max-w-full'
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            createNewTab(bookmark.url as string);
+          }}
+        >
+          {bookmark.url}
+        </a>
       )}
     </div>
   ));

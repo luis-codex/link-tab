@@ -1,4 +1,4 @@
-import { IconFolderClosed, IconFolderOpen } from '@app/assets/icons';
+import { IconFolderClosed, IconFolderOpen, IconTrash } from '@app/assets/icons';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -11,7 +11,7 @@ import { deleteFolder } from '@app/services/bookmarks';
 import useStoreSidebar from '@app/store/Sidebar/useStoreSidebar';
 import { BookmarkNode, useGlobalStore } from '@app/store/store-global';
 import { motion } from 'framer-motion';
-import { Cloud, Hand, Pencil, Trash } from 'lucide-react';
+import { Cloud, Hand, Pencil } from 'lucide-react';
 import React, { memo, useCallback, useMemo, useState } from 'react';
 
 type FolderParentProps = {
@@ -97,7 +97,7 @@ const CardContextMenu = ({
     <ContextMenu>
       <ContextMenuTrigger>
         {children}
-        <ContextMenuContent className='border border-accent-1 bg-accent-1 font-light tracking-wide'>
+        <ContextMenuContent className='border border-accent-1 bg-accent-1 font-light tracking-wide text-accent-5'>
           <ContextMenuItem
             className='u-flex-center-start gap-4'
             onSelect={() => SetDragItem({ type: 'folder', id })}
@@ -126,7 +126,7 @@ const CardContextMenu = ({
             }}
           >
             <span>
-              <Trash className='size-4' />
+              <IconTrash className='size-4' />
             </span>
             Delete
           </ContextMenuItem>

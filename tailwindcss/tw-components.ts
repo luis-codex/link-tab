@@ -264,7 +264,12 @@ const twCompoents = plugin(function ({ addComponents }) {
             fontWeight: '600',
         },
 
-        ".bg-stripes": {
+        ".bg-stripes-light": {
+            background: "hsl(var(--accent-1) / 0.8)",
+            backgroundImage: "linear-gradient(135deg, hsl(var(--accent-1) / 0.1) 10%, #0000 0, #0000 50%, hsl(var(--accent-1) / 0) 0, hsl(var(--accent-1) / 0.6) 60%, #0000 0, #0000)",
+            backgroundSize: "7.07px 7.07px",
+        },
+        ".bg-stripes-dark": {
             background: "hsl(var(--accent-1) / 0.4)",
             backgroundImage: "linear-gradient(135deg, hsl(var(--accent-1) / 0.1) 10%, #0000 0, #0000 50%, hsl(var(--accent-1) / 0) 0, hsl(var(--accent-1) / 0.6) 60%, #0000 0, #0000)",
             backgroundSize: "7.07px 7.07px",

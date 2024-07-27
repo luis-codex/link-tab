@@ -23,7 +23,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ul
-      className='absolute w-fit px-2 inset-x-0 h-10 bottom-0 mx-auto bg-accent-1 u-flex-center gap-2 *:u-flex-center *:rounded translate-y-[2.2em] hover:translate-y-0 transition-transform duration-300 ease-in-out'
+      className='absolute w-fit px-2 inset-x-0 h-10 bottom-0 mx-auto text-accent-6 bg-accent-2 dark:bg-accent-1 u-flex-center gap-2 *:u-flex-center *:rounded translate-y-[2.2em] hover:translate-y-0 transition-transform duration-300 ease-in-out'
       // data-active={open}
       // onMouseEnter={() => setOpen(true)}
       // onMouseLeave={() => setOpen(false)}
