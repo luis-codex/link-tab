@@ -21,7 +21,7 @@ La extensión utiliza inteligencia artificial para analizar los marcadores guard
     <img src="./install/3.png" alt="3" width="100%"/>
 </div>
 
-## video de demosntración de uso:
+## video de demostración de uso:
 
 https://github.com/user-attachments/assets/e5ddb7cc-3265-414d-8af4-b58a3116e940
 
