@@ -1,7 +1,17 @@
-# FUNSIONES AI.
+# link-tab
 
-la ai puede darte estadiscas sobre los dominos en los que has estado y recomendaciones de como organizar tus bookmars y carpetas. Además de poder buscar por palabras clave en tus bookmarks y carpetas.
+## Descripción
+ una extensión de navegador que optimiza la gestión de pestañas y marcadores con inteligencia artificial, ofreciendo sugerencias inteligentes de enlaces para una navegación más eficiente y organizada.
 
-# FUNCIONES DE LA IA
+## Instalación
 
-puede generar codigo que luego sera ejecutado. el codigo generado sera con un previo entrenamiendo asiendole entender como es la sintaxis de las funsiones. Todo esto estara dentro de una ventana modal de chat. USAREMOS A GPT4-0 MINI.
+1. Ve a la sección de releases y descarga el archivo comprimido.
+<div style="display:flex;flex-wrap:wrap">
+    <img src="./install/1.png" alt="1" width="50%"/>
+    <img src="./install/2.png" alt="2" width="50%"/>
+</div>
+
+1. Descomprime el archivo en la carpeta que desees y sube el descomprimido a la sección de extensiones de chrome `chrome://extensions/`. Asegurate de tener activado el modo desarrollador.
+<div>
+    <img src="./install/3.png" alt="3" width="100%"/>
+</div>
