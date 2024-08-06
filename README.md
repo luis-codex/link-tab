@@ -1,4 +1,4 @@
-# link-tab
+# link-tab  (alpha v0.1.0)
 
 ## Descripción
  una extensión de navegador que optimiza la gestión de pestañas y marcadores con inteligencia artificial, ofreciendo sugerencias inteligentes de enlaces para una navegación más eficiente y organizada.
