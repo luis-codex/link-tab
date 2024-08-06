@@ -266,14 +266,21 @@ const twCompoents = plugin(function ({ addComponents }) {
 
         ".bg-stripes-light": {
             background: "hsl(var(--accent-1) / 0.8)",
-            backgroundImage: "linear-gradient(135deg, hsl(var(--accent-1) / 0.1) 10%, #0000 0, #0000 50%, hsl(var(--accent-1) / 0) 0, hsl(var(--accent-1) / 0.6) 60%, #0000 0, #0000)",
+            backgroundImage: "linear-gradient(135deg, hsl(var(--accent-2)/ 0.1) 10%, #0000 0, #0000 50%, hsl(var(--accent-2) / 0) 0, hsl(var(--accent-2) / 0.9) 60%, #0000 0, #0000)",
             backgroundSize: "7.07px 7.07px",
         },
         ".bg-stripes-dark": {
             background: "hsl(var(--accent-1) / 0.4)",
-            backgroundImage: "linear-gradient(135deg, hsl(var(--accent-1) / 0.1) 10%, #0000 0, #0000 50%, hsl(var(--accent-1) / 0) 0, hsl(var(--accent-1) / 0.6) 60%, #0000 0, #0000)",
+            backgroundImage: "linear-gradient(135deg, hsl(var(--accent-3)/ 0.9) 10%, #0000 0, #0000 50%, hsl(var(--accent-2) / 0) 0, hsl(var(--accent-8) / 0.4) 60%, #0000 0, #0000)",
             backgroundSize: "7.07px 7.07px",
+        },
+
+        /* bg top */
+        ".bg-pattern": {
+            backgroundPosition: ".5% 0",
+            backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16A8 8 0 108 0a8 8 0 000 16zm0-2A6 6 0 108 2a6 6 0 000 12zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='.15' fill-rule='evenodd'/%3E%3C/svg%3E")`,
         }
+
     });
 })
 

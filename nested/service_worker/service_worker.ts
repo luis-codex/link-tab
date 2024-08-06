@@ -1,4 +1,5 @@
 console.log('Service Worker Loaded...');
+import debounce from '../../src/utils/debounce';
 import { toggleModal } from './actions';
 
 const manifest = chrome.runtime.getManifest()
@@ -26,7 +27,8 @@ async function handleModal(tab: chrome.tabs.Tab) {
     } while (!isActivated);
 }
 
-chrome.commands.onCommand.addListener(async (command, tab) => {
+
+const HandlerCommand = async (command: string, tab: chrome.tabs.Tab) => {
     switch (command) {
         case 'toggle-modal': {
             handleModal(tab);
@@ -35,7 +37,10 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
         default:
             break;
     }
-});
+}
+
+const debounceHandlerCommand = debounce(HandlerCommand, 500, { immediate: true });
+chrome.commands.onCommand.addListener(debounceHandlerCommand);
 
 async function sendMessageAllTabs(message: string) {
     try {
@@ -59,7 +64,9 @@ chrome.storage.local.onChanged.addListener((changes) => {
 });
 
 
-chrome.action.onClicked.addListener(async (tab) => {
+const handlerOnClicked = async (tab: chrome.tabs.Tab) => {
     handleModal(tab);
-});
+}
+const debounceHandlerOnClicked = debounce(handlerOnClicked, 500, { immediate: true });
+chrome.action.onClicked.addListener(debounceHandlerOnClicked);
 

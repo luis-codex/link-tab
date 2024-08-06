@@ -1,40 +1,60 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useGlobalStore } from '@app/store/store-global';
+import { IconFolderClosed, IconLink } from '@app/assets/icons';
+import { DragItem, useDrag } from '@app/store/useDrag';
 import { useMouse } from '@uidotdev/usehooks';
+import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
+/* TODO: mejorar el uso de los iconos */
+const IconDragItem = (item: DragItem) => {
+  switch (item.type) {
+    case 'bookmark':
+      return item.payload.type === 'link' ? (
+        <IconLink className='size-4' />
+      ) : (
+        <IconFolderClosed className='size-4' />
+      );
+    case 'tab':
+      return item.payload.type === 'tab' ? (
+        <IconLink className='size-4' />
+      ) : (
+        <IconFolderClosed className='size-4' />
+      );
+  }
+};
+
 export default function CursorOverlay() {
-  const [mouse, ref] = useMouse();
-  const dragItem = useGlobalStore((s) => s.dragItem);
-  const SetDragItem = useGlobalStore((s) => s.SetDragItem);
+  const [mouse, ref] = useMouse<HTMLDivElement>();
+  const dragItem = useDrag((s) => s.dragItem);
+  const setDragItem = useDrag((s) => s.setDragItem);
 
   useEffect(() => {
     if (dragItem) {
       const handleKeyUp = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') SetDragItem(null);
+        if (e.key === 'Escape') setDragItem(null);
       };
-
       window.addEventListener('keyup', handleKeyUp);
       return () => {
         window.removeEventListener('keyup', handleKeyUp);
       };
     }
-  }, [SetDragItem, dragItem]);
+  }, [setDragItem, dragItem]);
 
   if (!dragItem) return;
 
   return createPortal(
-    <div
-      ref={ref as any}
-      className='fixed z-50 rounded-md pointer-events-none bg-accent-3 size-5 animate-fade-in-blur'
+    <motion.div
+      ref={ref}
+      className={`fixed z-[100] outline pointer-events-none p-1 text-accent-8 bg-accent-2 rounded-[calc(15px-10px)] opacity-90 scale-150`}
       style={{
         left: `${mouse.x}px`,
         top: `${mouse.y}px`,
         transform: 'translate(-50%, -50%)',
         transition: 'transform 0.1s ease',
       }}
-    ></div>,
+    >
+      <IconDragItem {...dragItem} />
+    </motion.div>,
     document.body
   );
 }

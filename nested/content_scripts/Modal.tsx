@@ -68,6 +68,11 @@ export default function Modal({ root }: { root: HTMLElement }) {
       <div
         data-open={open}
         className={`modal ${theme}`}
+        style={
+          {
+            '--bg': `url(${chrome.runtime.getURL('d3.jpg')})`,
+          } as React.CSSProperties
+        }
         onClick={(e) => {
           if (e.target === e.currentTarget) {
             setOpen(false);

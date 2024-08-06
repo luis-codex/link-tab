@@ -1,19 +1,21 @@
-import { getTreeBookmarks } from '@app/services/bookmarks';
-import { useGlobalStore } from '@app/store/store-global';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { flattenTreeMarkers, getTreeBookmarks } from '@app/services/bookmarks';
+import { useBookmarksStore } from '@app/store/useBookmark';
+import debounce from 'debounce';
 import { useEffect } from 'react';
 
 export default function useLoadBookmarks() {
-    const SetBookmarksTree = useGlobalStore(s => s.SetBookmarksTree)
+    const [ setBookmarksTree, setLinksSelected, linksSelected, bookmarksTree ] = useBookmarksStore(s => [ s.setBookmarksTree, s.setLinksSelected, s.linksSelected, s.bookmarksTree ])
 
     useEffect(() => {
-        const init = async () => {
+        const init = debounce(async () => {
             const tree = await getTreeBookmarks();
-            SetBookmarksTree(tree)
-        };
+            setBookmarksTree(tree)
+        }, 500, { immediate: true })
 
         init()
-
         if (!__ISPROD_) { return }
+
         const api = chrome.bookmarks;
         api.onCreated.addListener(init);
         api.onChanged.addListener(init);
@@ -38,5 +40,14 @@ export default function useLoadBookmarks() {
             api.onImportEnded.removeListener(init);
             api.onImportBegan.removeListener(init);
         };
-    }, [ SetBookmarksTree ])
+    }, [ setBookmarksTree ])
+
+    useEffect(() => {
+        if (!bookmarksTree) return
+        if (!linksSelected || linksSelected.length === 0) return
+        const { ids } = flattenTreeMarkers(bookmarksTree)
+        const linksExist = linksSelected.filter((id) => ids.includes(id))
+        setLinksSelected(linksExist)
+    }, [ bookmarksTree ])
+
 }

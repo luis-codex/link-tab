@@ -39,23 +39,22 @@ export default function ModalNewFolders() {
       }}
     >
       <Portal>
-        <Content className='fixed inset-0 m-auto w-[300px] h-fit border z-50 bg-background rounded shadow-2xl dark:shadow-foreground/5'>
+        <Content className='fixed inset-0 m-auto w-[300px] h-fit outline outline-accent-2 z-50 before-noise bg-background/50 backdrop-blur-3xl rounded-[calc(15px-5px)] shadow-2xl'>
           <form
-            className='u-bg-noise size-full p-4 grid gap-6 overflow-hidden text-accent-6'
+            className='size-full p-4 grid gap-6 overflow-hidden text-accent-6 rounded-xl'
             onSubmit={handleSubmit}
           >
-            <div className='absolute pointer-events-none size-full bg-foreground/5 inset-0'></div>
             <Title className='font-semibold text-center uppercase text-sm'>
               {dataNewFolder?.type === 'edit' ? 'Edit' : 'New'} folder
             </Title>
             <Input
               placeholder='Folder name'
               name='folderName'
+              className='bg-transparent'
               defaultValue={
                 dataNewFolder?.type === 'edit' ? dataNewFolder?.title : ''
               }
             />
-            {/* <div className='grid grid-cols-2'> */}
             <Button type='submit' className='uppercase text-sm'>
               save
             </Button>
@@ -63,7 +62,7 @@ export default function ModalNewFolders() {
           </form>
           <Close
             type='button'
-            className='text-red-500 absolute -right-3 -top-3 uppercase text-sm bg-accent-2 rounded-full p-1 u-flex-center'
+            className='text-red-300 absolute -right-3 -top-3 uppercase text-sm bg-red-700 rounded-full p-1 u-flex-center'
           >
             <X className='size-4' />
           </Close>

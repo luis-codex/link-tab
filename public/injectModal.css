@@ -27,8 +27,9 @@
 .modal {
   /* outline: 4px solid hsl(0deg 0% 97.44% / 10%); */
   /* outline: 1px solid hsl(0 0% 20.1%); */
-  outline: 2px solid hsl(0 0% 93%);
-  /* box-shadow: 0 0 0 3px hsl(0 0% 20.1%); */
+  /* outline: 2px solid hsl(0 0% 93%); */
+  box-shadow: 0 0 0 3px hsl(0 0% 20.1%);
+  /* outline: 2px solid hsl(0deg 0% 40%); */
   outline-offset: 0;
   background: #000;
   position: fixed;
@@ -45,9 +46,9 @@
   border-radius: var(--radius);
 }
 
-.modal.dark {
+/* .modal.dark {
   outline: 2px solid hsl(0 0% 7%);
-}
+} */
 
 .modal {
   visibility: hidden;
@@ -72,28 +73,6 @@
   z-index: -1;
   transform: scale(1.1);
   filter: blur(50px);
-}
-
-.right,
-.left {
-  width: 50vw;
-  max-width: 500px;
-  margin: auto 0;
-  top: 0;
-  bottom: 0;
-}
-
-.modal.right {
-  right: 8px;
-}
-
-.modal.left {
-  left: 8px;
-}
-
-.modal.center {
-  max-width: 600px;
-  inset: 0;
 }
 
 .modal iframe {

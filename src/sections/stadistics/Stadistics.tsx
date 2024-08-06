@@ -1,4 +1,5 @@
-import { useGlobalStore } from '@app/store/store-global';
+import { Button } from '@app/components/ui/button';
+import { useBookmarksStore } from '@app/store/useBookmark';
 import {
   Close,
   Content,
@@ -13,9 +14,15 @@ import { Suspense, useEffect, useState } from 'react';
 
 type BookmarkNode = chrome.bookmarks.BookmarkTreeNode;
 
+function agregarSubdominio(acc: string[], hostname: string) {
+  if (!acc.includes(hostname)) acc.push(hostname);
+}
+
 function flattenBookmarkTree(nodes: chrome.bookmarks.BookmarkTreeNode[]) {
   const duplicateUrls: Record<string, BookmarkNode[]> = {};
   const duplicateTitles: Record<string, BookmarkNode[]> = {};
+
+  const byDomaninsAnsSubDomains: string[] = [];
 
   const nodeStack: BookmarkNode[] = [...nodes];
   while (nodeStack.length) {
@@ -25,6 +32,8 @@ function flattenBookmarkTree(nodes: chrome.bookmarks.BookmarkTreeNode[]) {
     if (url) {
       if (duplicateUrls[url]) duplicateUrls[url].push(node);
       else duplicateUrls[url] = [node];
+
+      agregarSubdominio(byDomaninsAnsSubDomains, new URL(url).hostname);
     }
 
     if (title) {
@@ -40,19 +49,46 @@ function flattenBookmarkTree(nodes: chrome.bookmarks.BookmarkTreeNode[]) {
     if (nodes.length === 1) delete duplicateUrls[url];
   });
 
-  return { duplicateUrls, duplicateTitles };
+  return { duplicateUrls, duplicateTitles, byDomaninsAnsSubDomains };
 }
+
+export const BtnDataStadistics = ({
+  setPrompt,
+}: {
+  setPrompt: (text: string, action: string) => void;
+}) => {
+  const bookmarksTree = useBookmarksStore((state) => state.bookmarksTree);
+
+  return (
+    <button
+      onClick={() => {
+        if (!bookmarksTree) return;
+        const { byDomaninsAnsSubDomains: byDomainsAndSubDomains } =
+          flattenBookmarkTree(bookmarksTree);
+        setPrompt(
+          JSON.stringify(byDomainsAndSubDomains, null, 2),
+          `A continuación se presentan una serie de datos. Clasifica estos datos dentro de un objeto JSON en formato clave-valor, donde cada clave representa una categoría relevante y cada valor es una lista de elementos que pertenecen a esa categoría. Asegúrate de que las categorías sean precisas y representen adecuadamente los datos proporcionados. El formato debe ser un objeto JSON clave-valor: [{"Categoría1": ["elemento1", "elemento2"]}, {"Categoría2": ["elemento1", "elemento2"]}].Conclusión: Proporciona una conclusión detallada sobre los patrones y tendencias observados en los datos clasificados. Por ejemplo, podrías señalar qué categorías son las más comunes, si hay una concentración de ciertos tipos de servidores en alguna categoría, o cualquier otra observación relevante.`
+        );
+      }}
+      className='bg-accent-6/20 px-2 py-1 rounded-lg text-sm'
+    >
+      organize data
+    </button>
+  );
+};
 
 function Stadisticss() {
   const [duplicateUrls, setDuplicateUrls] =
     useState<Record<string, BookmarkNode[]>>();
-  const bookmarksTree = useGlobalStore((state) => state.bookmarksTree);
+  const bookmarksTree = useBookmarksStore((state) => state.bookmarksTree);
 
   useEffect(() => {
     if (!bookmarksTree) return;
     // console.log(flattenBookmarkTree(bookmarksTree));
-    const { duplicateUrls } = flattenBookmarkTree(bookmarksTree);
+    const { duplicateUrls, byDomaninsAnsSubDomains } =
+      flattenBookmarkTree(bookmarksTree);
     setDuplicateUrls(duplicateUrls);
+    console.log(byDomaninsAnsSubDomains);
   }, [bookmarksTree]);
 
   return (
@@ -90,7 +126,7 @@ export default function Stadistics() {
   return (
     <Root>
       <Trigger asChild>
-        <button className='text-accent-5 hover:text-accent-7'>
+        <Button variant='dark' size='icon'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             width='24'
@@ -109,7 +145,7 @@ export default function Stadistics() {
             <path d='M12 18v-6' />
             <path d='M16 18v-3' />
           </svg>
-        </button>
+        </Button>
       </Trigger>
       <Portal>
         <Overlay />

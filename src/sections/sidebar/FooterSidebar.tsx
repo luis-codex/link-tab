@@ -1,8 +1,8 @@
-import { useGlobalStore } from '@app/store/store-global';
+import { useBookmarksStore } from '@app/store/useBookmark';
 import { FolderTree, Link, ListTree } from 'lucide-react';
 
 function ViewDataFolderSelected() {
-  const metadataFolder = useGlobalStore((s) => s.metadataFolder);
+  const metadataFolder = useBookmarksStore((s) => s.metadataFolder);
   if (!metadataFolder) return null;
   return (
     <div className='u-flex-center-start gap-4'>

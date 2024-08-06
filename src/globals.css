@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
+  /* :root { */
+  /* --background: 0 0% 100%;
     --foreground: 208 100% 20%;
     --card: 0 0% 98%;
     --card-foreground: 0% 0% 20%;
@@ -22,23 +22,24 @@
     --destructive-foreground: 208 100% 20%;
     --border: 0 0% 80%;
     --input: 0 0% 80%;
-    --ring: 240 4.9% 16.1%;
+    --ring: 240 4.9% 16.1%; */
 
-    /* accents */
-    --accent-8: 0 0% 2%;
-    --accent-7: 0 0% 7%; /* sub-header */
-    --accent-6: 0 0% 37%; /* Paragraph */
-    --accent-5: 0 0% 47%; /* Paragraph */
-    --accent-4: 0 0% 60%;
-    --accent-3: 0 0% 73%;
-    --accent-2: 0 0% 80%;
-    --accent-1: 0 0% 93%;
+  /* accents */
+  /* --accent-8: 0 0% 2%; */
+  /* --accent-7: 0 0% 7%; sub-header */
+  /* --accent-6: 0 0% 37%; Paragraph */
+  /* --accent-5: 0 0% 47%; Paragraph */
+  /* --accent-4: 0 0% 60%; */
+  /* --accent-3: 0 0% 73%; */
+  /* --accent-2: 0 0% 80%; */
+  /* --accent-1: 0 0% 93%; */
 
-    --radius: 0.5rem;
-    font-size: 16px;
-  }
+  /* --radius: 0.5rem; */
+  /* font-size: 16px; */
+  /* } */
 
-  .dark {
+  /*  */
+  :root {
     --background: 0 0% 0%;
     --foreground: 208 100% 97%;
     --card: 0 0% 5%;
@@ -79,9 +80,35 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground dark:u-bg-noise text-base font-sans;
+    @apply bg-background text-foreground text-base font-sans;
     text-rendering: optimizespeed;
   }
+}
+
+body {
+  position: relative;
+  background: #000000;
+}
+
+body::before {
+  background-image: url('/bg-noise.webp');
+  background-size: cover;
+  content: '';
+  position: fixed;
+  opacity: 0.12;
+  inset: 0;
+  z-index: -1;
+}
+
+.before-noise::before {
+  background-image: url('/bg-noise.webp');
+  background-size: cover;
+  content: '';
+  position: absolute;
+  opacity: 0.12;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
 }
 
 ::-webkit-scrollbar {
@@ -239,21 +266,6 @@ a[data-variant=react]:before {
   background-size: 7.07px 7.07px;
 }
 
-.bg-stripes-gray {
-  background-color: hsl(var(--accent-1) / 0.4);
-  background-image: linear-gradient(
-    135deg,
-    hsl(var(--accent-2)) 10%,
-    #0000 0,
-    #0000 50%,
-    hsl(var(--accent-2)) 0,
-    hsl(var(--accent-2)) 60%,
-    #0000 0,
-    #0000
-  );
-  background-size: 7.07px 7.07px;
-}
-
 /*  */
 .bg-stripes {
   background-color: hsl(var(--accent-1) / 0.4);
@@ -269,3 +281,100 @@ a[data-variant=react]:before {
   );
   background-size: 7.07px 7.07px;
 }
+
+/* 
+BOTONES :  bg-accent-6/20
+BG : bg-background/40 
+
+*/
+
+/* ----------------------- */
+.typing-indicator {
+  width: 60px;
+  height: 30px;
+  position: relative;
+  z-index: 4;
+}
+
+.typing-circle {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: #000;
+  left: 15%;
+  transform-origin: 50%;
+  animation: typing-circle7124 0.5s alternate infinite ease;
+}
+
+@keyframes typing-circle7124 {
+  0% {
+    top: 20px;
+    height: 5px;
+    border-radius: 50px 50px 25px 25px;
+    transform: scaleX(1.7);
+  }
+
+  40% {
+    height: 8px;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+.typing-circle:nth-child(2) {
+  left: 45%;
+  animation-delay: 0.2s;
+}
+
+.typing-circle:nth-child(3) {
+  left: auto;
+  right: 15%;
+  animation-delay: 0.3s;
+}
+
+.typing-shadow {
+  width: 5px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 30px;
+  transform-origin: 50%;
+  z-index: 3;
+  left: 15%;
+  filter: blur(1px);
+  animation: typing-shadow046 0.5s alternate infinite ease;
+}
+
+@keyframes typing-shadow046 {
+  0% {
+    transform: scaleX(1.5);
+  }
+
+  40% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scaleX(0.2);
+    opacity: 0.4;
+  }
+}
+
+.typing-shadow:nth-child(4) {
+  left: 45%;
+  animation-delay: 0.2s;
+}
+
+.typing-shadow:nth-child(5) {
+  left: auto;
+  right: 15%;
+  animation-delay: 0.3s;
+}
+/*  */

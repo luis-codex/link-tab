@@ -1,4 +1,4 @@
-import imgVite from '/vite.svg';
+import imgVite from '/logo.svg';
 
 /**
  * Returns the URL of the favicon for a given page URL.

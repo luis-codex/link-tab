@@ -1,4 +1,4 @@
-import { BookmarkList, BookmarkNode } from "@app/store/store-global";
+import { BookmarkList, BookmarkNode } from '@app/types/bookmarks';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 
 export const getBookmarksWithUrls = (
@@ -29,3 +29,7 @@ export const distanceToNow = (date: string | number) => {
 export const formatMMDDYYYY = (date: string | number) => {
     return format(date, 'Pp');
 };
+
+export const MMDDYY_TO_TIMESTAMP = (date: string) => {
+    return new Date(date).getTime();
+}

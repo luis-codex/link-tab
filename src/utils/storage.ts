@@ -18,5 +18,5 @@ export const storage: StateStorage = __ISPROD_
     }
     : localStorage;
 
-const storageZustand = <T>() => createJSONStorage<T>(() => storage);
-export default storageZustand;
+const storageChromeLocal = <T>() => createJSONStorage<T>(() => storage);
+export default storageChromeLocal;

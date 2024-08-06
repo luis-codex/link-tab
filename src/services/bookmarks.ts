@@ -1,4 +1,5 @@
-import { BookmarkList, BookmarkNode } from '@app/store/store-global';
+import { BookmarkFolders, BookmarkList, BookmarkNode } from '@app/types/bookmarks';
+import { toast } from 'sonner';
 import { getFaviconUrl } from './favicon';
 
 export const getTreeBookmarks = async (): Promise<chrome.bookmarks.BookmarkTreeNode[]> => {
@@ -9,107 +10,214 @@ export const getTreeByFolderId = async (folderId: string): Promise<chrome.bookma
     return __ISPROD_ ? chrome.bookmarks.getSubTree(folderId) : JSON.parse(__BOOKMARKS__)
 }
 
+export const getBookmarksByID = async (id: string) => {
+    const bookmarks = await getTreeByFolderId(id);
+    return flattenTreeMarkers(bookmarks);
+}
 
-export const getBookmarksWithUrls = (
+export const flattenTreeMarkers = (
     bookmarks: chrome.bookmarks.BookmarkTreeNode[]
 ) => {
-    const result: BookmarkList[] = [];
+    const links: BookmarkList[] = [];
+    const Folders: BookmarkFolders[] = [];
+    const ids: string[] = [];
+
+    const urls = new Set();
+    const duplicates = [];
+
+    const emptyFolders = [];
+
+
+
     const set = new Map<string, string>();
+
     const traverse = (nodes: BookmarkNode[],) => {
         nodes.forEach((node) => {
+
+            if (urls.has(node.url)) duplicates.push(node);
+            else urls.add(node.url);
+
+
             if (node.url) {
-                result.push({
+                links.push({
                     ...node, titleParent: node.parentId && set.get(node.parentId),
                     favicon: getFaviconUrl(node.url)
                 });
+            } else if (node.children) {
+
+                if (node.children.length === 0) {
+                    emptyFolders.push(node);
+                }
+
+                const { children, ...folder } = node;
+                Folders.push({
+                    ...folder, titleParent: node.parentId && set.get(node.parentId),
+                    isEmpty: children.length === 0
+                });
             }
+
+            ids.push(node.id);
+
             if (node.children && node.children.length > 0) {
                 set.set(node.id, node.title);
                 traverse(node.children);
             }
         });
     };
+
     traverse(bookmarks);
-    return result;
+    return {
+        links,
+        Folders,
+        ids
+
+    }
 };
 
 export const moveLinksInFolder = async (linkIds: string[], folderId: string) => {
     /*id: string, destination: chrome.bookmarks.BookmarkDestinationArg*/
-    const { erros, success }: {
-        erros: string[];
-        success: string[];
-    } = { erros: [], success: [] };
 
-    // Esperar a que todas las operaciones se completen
-    await Promise.all(linkIds.map((linkId) => {
-        chrome.bookmarks.move(linkId, { parentId: folderId })
-            .then(() => success.push(linkId))
-            .catch(() => erros.push(linkId));
-    }));
+    const promise = () => new Promise((resolve, reject) => {
+        linkIds.forEach(linkId => {
+            chrome.bookmarks.move(linkId, { parentId: folderId }, (result) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    });
 
-    return { erros, success }
+    toast.promise(promise, {
+        loading: 'Loading...',
+        success: 'Moved links',
+        error: (error) => `Error: ${error.message}`,
+        duration: 1500
+    });
 }
 
 export const moveFolderInFolder = async (folderId: string, destinationId: string) => {
-    try {
-        await chrome.bookmarks.move(folderId, { parentId: destinationId })
-        return true
-    } catch (error) {
-        return false
-    }
+    const promise = () => new Promise((resolve, reject) => {
+        chrome.bookmarks.move(folderId, { parentId: destinationId }, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    toast.promise(promise, {
+        loading: 'Loading...',
+        success: 'Moved folder',
+        error: (error) => `Error: ${error.message}`
+    });
 }
 
 export const deleteBookmarks = async (bookmarkIds: string[]) => {
-    const { erros, success }: {
-        erros: string[];
+    const { errors, success }: {
+        errors: string[];
         success: string[];
-    } = { erros: [], success: [] };
+    } = { errors: [], success: [] };
 
+    // Crear una función para manejar la eliminación de bookmarks
+    const deleteBookmark = (bookmarkId: string) => {
+        return new Promise((resolve, reject) => {
+            chrome.bookmarks.remove(bookmarkId, () => {
+                const error = chrome.runtime.lastError;
+                if (error) {
+                    errors.push(bookmarkId);
+                    reject(error);
+                } else {
+                    success.push(bookmarkId);
+                    resolve(bookmarkId);
+                }
+            });
+        });
+    };
     // Esperar a que todas las operaciones se completen
-    await Promise.all(bookmarkIds.map((bookmarkId) => {
-        chrome.bookmarks.remove(bookmarkId)
-            .then(() => success.push(bookmarkId))
-            .catch(() => erros.push(bookmarkId));
-    }));
+    const promise = Promise.all(bookmarkIds.map(deleteBookmark));
 
-    return { erros, success }
+    toast.promise(promise, {
+        loading: 'Loading...',
+        success: () => {
+            return `Deleted ${success.length} bookmarks and ${errors.length} bookmarks failed to delete`;
+        },
+        error: 'Error'
+    });
 }
 
-export const deleteFolder = async (folderId: string) => {
-    try {
-        await chrome.bookmarks.removeTree(folderId)
-        return true
-    } catch (error) {
-        return false
-    }
+export const deleteFolder = (folderId: string) => {
+    const pomise = new Promise((resolve, reject) => {
+        chrome.bookmarks.removeTree(folderId, () => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve({ message: 'Folder deleted' });
+            }
+        });
+    });
+
+    toast.promise(pomise, {
+        loading: 'Loading...',
+        success: 'Folder deleted',
+        error: (error) => `Error: ${error.message}`
+    });
 }
+
 export const editFolder = async (folderId: string, title: string) => {
-    try {
-        await chrome.bookmarks.update(folderId, { title })
-        return true
-    } catch (error) {
-        return false
-    }
+    const promise = new Promise((resolve, reject) => {
+        chrome.bookmarks.update(folderId, { title }, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    toast.promise(promise, {
+        loading: 'Loading...',
+        success: 'Folder updated',
+        error: (error) => `Error: ${error.message}`
+    });
 }
 
 export const createFolder = async (title: string, id: string) => {
-    try {
-        const folder = await chrome.bookmarks.create({ title, parentId: id })
-        return folder
-    } catch (error) {
-        console.log(error);
-        return null
-    }
+    const promise = new Promise((resolve, reject) => {
+        chrome.bookmarks.create({ title, parentId: id }, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    toast.promise(promise, {
+        loading: 'Loading...',
+        success: 'Folder created',
+        error: (error) => `Error: ${error.message}`
+    });
 }
 
-
 export const editLink = async (linkId: string, title: string, url: string) => {
-    try {
-        await chrome.bookmarks.update(linkId, { title, url })
-        return true
-    } catch (error) {
-        return false
-    }
+    const promise = new Promise((resolve, reject) => {
+        chrome.bookmarks.update(linkId, { title, url }, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    toast.promise(promise, {
+        loading: 'Loading...',
+        success: 'Link updated',
+        error: (error) => `Error: ${error.message}`
+    });
 }
 
 

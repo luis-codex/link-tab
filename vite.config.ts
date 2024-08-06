@@ -8,7 +8,7 @@ const packageJson = JSON.parse(readFileSync('package.json', 'utf-8'))
 
 const __ISPROD_ = process.env.NODE_ENV === 'production';
 
-const nameFiles = [ 'bookmarks' ];
+const nameFiles = [ 'bookmarks', 'tabs' ];
 
 /**
  * Asynchronously loads environment-specific data from JSON files.
@@ -42,12 +42,12 @@ const generateManifestChrome = (): PluginOption => {
         action: {
           default_title: packageJson.name,
         },
-        // icons: {
-        //   16: 'icon_extension_16.png',
-        //   32: 'icon_extension_32.png',
-        //   48: 'icon_extension_48.png',
-        //   128: 'icon_extension_128.png',
-        // },
+        icons: {
+          16: 'logo-16.png',
+          32: 'logo-32.png',
+          48: 'logo-48.png',
+          128: 'logo-128.png',
+        },
         permissions: [ 'scripting', 'tabs', 'activeTab', 'topSites', 'storage', 'bookmarks', 'favicon', 'alarms', 'notifications', 'tabGroups' ],
         web_accessible_resources: [ {
           matches: [ '<all_urls>' ],

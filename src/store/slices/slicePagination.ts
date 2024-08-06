@@ -7,8 +7,8 @@ import { type StateCreator } from 'zustand';
 
 export interface IPaginationState extends PaginationReturns {
   itemsPerPage: number;
-  SetCountList: (total: number) => void;
-  SetItemsPerPage: (itemsPerPage: number) => void;
+  setCountList: (total: number) => void;
+  setItemsPerPage: (itemsPerPage: number) => void;
   goToPage: (pageNumber: number) => void;
 
   next: () => void;
@@ -29,7 +29,7 @@ export const slicePagination: StateCreator<IPaginationState> = (set) => ({
    * Updates the total number of items and recalculates the pagination.
    * @param total - The total number of items.
    */
-  SetCountList(total) {
+  setCountList(total) {
     set(({ itemsPerPage, currentPage }) => {
       return pagination({ itemsPerPage, currentPage, totalItems: total });
     });
@@ -38,7 +38,7 @@ export const slicePagination: StateCreator<IPaginationState> = (set) => ({
    * Updates the number of items per page and recalculates the pagination.
    * @param itemsPerPage - The number of items per page.
    */
-  SetItemsPerPage(itemsPerPage) {
+  setItemsPerPage(itemsPerPage) {
     set(({ totalItemsOnPages: totalItems, currentPage }) => {
       return pagination({ totalItems, currentPage, itemsPerPage });
     });
