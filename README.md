@@ -23,6 +23,9 @@ La extensión utiliza inteligencia artificial para analizar los marcadores guard
 
 ## video de demostración de uso:
 
-https://github.com/user-attachments/assets/e5ddb7cc-3265-414d-8af4-b58a3116e940
 
-😀✨ Gracias por revisar el proyecto. Además, pido disculpas por trabarme al hablar durante el video tutorial. Era mi primera vez haciendo un video y me puse nervioso, y tuve algunos problemas para expresarme correctamente 😣🥲.
+https://github.com/user-attachments/assets/ff324e7d-4b2c-4e97-9e04-0840c39e8f28
+
+
+
+😀✨ Gracias por revisar el proyecto.
